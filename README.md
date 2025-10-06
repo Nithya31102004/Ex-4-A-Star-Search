@@ -1,6 +1,6 @@
 <h1>ExpNo 4 : Implement A* search algorithm for a Graph</h1> 
-<h3>Name:       </h3>
-<h3>Register Number:           </h3>
+<h3>Name:NITHYA T</h3>
+<h3>Register Number:2305001023</h3>
 <H3>Aim:</H3>
 <p>To ImplementA * Search algorithm for a Graph using Python 3.</p>
 <H3>Algorithm:</H3>
@@ -50,74 +50,59 @@
 
 ## PROGRAM
 ```python
-
-from collections import defaultdict
-H_dist ={}
-def aStarAlgo(start_node, stop_node):
-    open_set = set(start_node)
-    closed_set = set()
-    g = {}  
-    parents = {}   
-    g[start_node] = 0
-    parents[start_node] = start_node
-    while len(open_set) > 0:
-        n = None
-        for v in open_set:
-            if n == None or g[v] + heuristic(v) < g[n] + heuristic(n):
-                n = v
-        if n == stop_node or Graph_nodes[n] == None:
-            pass
-        else:
-            for (m, weight) in get_neighbors(n):
-                if m not in open_set and m not in closed_set:
-                    open_set.add(m)
-                    parents[m] = n
-                    g[m] = g[n] + weight
-                else:
-                    if g[m] > g[n] + weight:
-                        g[m] = g[n] + weight
-                        parents[m] = n
-                        if m in closed_set:
-                            closed_set.remove(m)
-                            open_set.add(m)
-        if n == None:
-            print("Path does not exist!")
-            return None
-        if n == stop_node:
-            path = []
-            while parents[n] != n:
-                path.append(n)
-                n = parents[n]
-            path.append(start_node)
-            path.reverse()
-            print('Path found: {}'.format(path))
-            return path
-        open_set.remove(n)
-        closed_set.add(n)
-    print('Path does not exist!')
-    return None
-def get_neighbors(v):
-    if v in Graph_nodes:
-        return Graph_nodes[v]
-    else:
-        return None
-def heuristic(n):
-    return H_dist[n]
-graph = defaultdict(list)
-n,e = map(int,input().split())
-for i in range(e):
-    u,v,cost = map(str,input().split())
-    t=(v,int(cost))
-    graph[u].append(t)
-    t1=(u,int(cost))
-    graph[v].append(t1)
-for i in range(n):
-    node,h=map(str,input().split())
-    H_dist[node]=int(h)
-Graph_nodes=graph
-start=input()
-goal=input()
-aStarAlgo(start, goal)
+import heapq
+def a_star_search(graph, start, goal, heuristic):
+open_set = []
+heapq.heappush(open_set, (0 + heuristic[start], 0, start)) # (f_cost, g_cost, nod
+came_from = {}
+g_score = {node: float('inf') for node in graph}
+g_score[start] = 0
+while open_set:
+current_f_cost, current_g_cost, current_node = heapq.heappop(open_set)
+if current_node == goal:
+path = []
+while current_node in came_from:
+path.append(current_node)
+current_node = came_from[current_node]
+path.append(start)
+path.reverse()
+return path
+for neighbor, weight in graph[current_node].items():
+tentative_g_score = g_score[current_node] + weight
+if tentative_g_score < g_score[neighbor]:
+came_from[neighbor] = current_node
+g_score[neighbor] = tentative_g_score
+f_cost = tentative_g_score + heuristic[neighbor]
+heapq.heappush(open_set, (f_cost, tentative_g_score, neighbor))
+return None
+graph = {}
+num_nodes = int(input("Enter number of nodes in the graph: "))
+print("\nEnter neighbors in the format: neighbor:weight (comma separated).")
+print("Example: For node A → B with cost 1 and C with cost 4, enter: B:1,C:4")
+print("If no neighbors, press Enter.\n")
+for _ in range(num_nodes):
+node = input("Enter node name: ").strip()
+neighbors = input(f"Enter neighbors for {node}: ").strip()
+graph[node] = {}
+if neighbors:
+for edge in neighbors.split(","):
+n, w = edge.split(":")
+graph[node][n.strip()] = int(w.strip())
+# Input heuristics
+heuristic = {}
+print("\nEnter heuristic values for each node:")
+for node in graph:
+h = int(input(f"Heuristic value for {node}: "))
+heuristic[node] = h
+# Start and goal
+start_node = input("\nEnter the start node: ").strip()
+goal_node = input("Enter the goal node: ").strip()
+# Run A* Search
+path = a_star_search(graph, start_node, goal_node, heuristic)
+if path:
+print(f"\nPath found: {path}")
+else:
+print("\nNo path found.")
 ```
 
 SAMPLE GRAPH I
@@ -185,5 +170,12 @@ G 0 <br>
 SAMPLE OUTPUT
 
 ![435098114-175123a9-8519-4ec4-b3f6-1151b674380d](https://github.com/user-attachments/assets/91f98b2e-c195-45de-9dbf-19bc17dbfb8f)
+<h2>GRAPH</h2>
+<img width="806" height="612" alt="image" src="https://github.com/user-attachments/assets/ae056b7a-7036-4070-9c98-b8dcd85e9f8f" />
+<h2>INPUT</h2>
+<img width="548" height="365" alt="image" src="https://github.com/user-attachments/assets/71423a6c-48bd-4ac2-870b-b75aee11dc98" />
+<h2>OUTPUT</h2>
+<img width="440" height="30" alt="image" src="https://github.com/user-attachments/assets/8ceb948e-3682-4ddc-ab6f-26a592b0f3cc" />
 
 ## RESULT
+Thus, The given Implement A* search algorithm for a Graph was executed successfully.
